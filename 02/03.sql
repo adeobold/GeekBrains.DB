@@ -1,0 +1,1 @@
+INSERT INTO cat SELECT * FROM shop.catalogs ON DUPLICATE KEY UPDATE name = shop.catalogs.name;

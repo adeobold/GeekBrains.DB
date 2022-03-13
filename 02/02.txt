@@ -1,0 +1,101 @@
+mysql> CREATE DATABASE file_storage
+    -> ;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use file_storage;
+Database changed
+
+mysql> DROP TABLE IF EXISTS files;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> CREATE TABLE files (
+    ->   id SERIAL PRIMARY KEY,
+    ->   name VARCHAR(255) COMMENT 'Название файла',
+    ->   type_id INT UNSIGNED COMMENT 'Тип файла',
+    ->   path VARCHAR(255) COMMENT 'Путь к файлу',
+    ->   description VARCHAR(255) COMMENT 'Описание',
+    ->   keywords TEXT COMMENT 'Ключевые слова',
+    ->   user_id INT UNSIGNED COMMENT 'Принадлежность пользователю',
+    ->   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ->   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    ->   KEY index_of_user_id(user_id)
+    -> ) COMMENT = 'Хранилище файлов';
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> DROP TABLE IF EXISTS file_types;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> CREATE TABLE file_types (
+    ->   id SERIAL PRIMARY KEY,
+    ->   description VARCHAR(255)
+    -> ) COMMENT = 'Типы файлов';
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> DROP TABLE IF EXISTS users;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> CREATE TABLE users (
+    ->   id SERIAL PRIMARY KEY,
+    ->   name VARCHAR(255)
+    -> ) COMMENT = 'Пользователи';
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> show tables
+    -> ;
++------------------------+
+| Tables_in_file_storage |
++------------------------+
+| file_types             |
+| files                  |
+| users                  |
++------------------------+
+3 rows in set (0.01 sec)
+
+mysql> INSERT INTO file_types VALUES
+    -> (DEFAULT, 'Video'),
+    -> (DEFAULT, 'Photo'),
+    -> (DEFAULT, 'Text');
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM file_types;
++----+-------------+
+| id | description |
++----+-------------+
+|  1 | Video       |
+|  2 | Photo       |
+|  3 | Text        |
++----+-------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO users VALUES
+    -> (DEFAULT, 'Admin'),
+    -> (DEFAULT, 'User1'),
+    -> (DEFAULT, 'User2');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM users;
++----+-------+
+| id | name  |
++----+-------+
+|  1 | Admin |
+|  2 | User1 |
+|  3 | User2 |
++----+-------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO files VALUES
+    -> (DEFAULT, 'Film1', 1, 'D:\\Films\\', 'Best film!', 'triller, Harrison Ford', 2, DEFAULT, DEFAULT),
+    -> (DEFAULT, 'Photo1', 1, 'D:\\Photo\\', 'Tom birthday', 'tom, birthday', 3, DEFAULT, DEFAULT);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM files;
++----+--------+---------+-----------+--------------+------------------------+---------+---------------------+---------------------+
+| id | name   | type_id | path      | description  | keywords               | user_id | created_at          | updated_at          |
++----+--------+---------+-----------+--------------+------------------------+---------+---------------------+---------------------+
+|  1 | Film1  |       1 | D:\Films\ | Best film!   | triller, Harrison Ford |       2 | 2022-03-11 15:44:37 | 2022-03-11 15:44:37 |
+|  2 | Photo1 |       1 | D:\Photo\ | Tom birthday | tom, birthday          |       3 | 2022-03-11 15:44:37 | 2022-03-11 15:44:37 |
++----+--------+---------+-----------+--------------+------------------------+---------+---------------------+---------------------+
+2 rows in set (0.00 sec)
